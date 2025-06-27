@@ -53,7 +53,7 @@ class MainWindowView(wx.Frame,Views.MainWindowView):
 class CrossStitchWorkView(wx.Frame, Views.CrossStitchWorkView):
    
     def __init__(self, controller,parentView):
-        wx.Frame.__init__(self,parentView, -1, "Cross Stitch",size=(300, 250))
+        wx.Frame.__init__(self,parentView, -1, "Cross Stitch")
         
         self.BackgroundColour = wx.WHITE
         
@@ -65,14 +65,15 @@ class CrossStitchWorkView(wx.Frame, Views.CrossStitchWorkView):
         box = wx.BoxSizer(wx.HORIZONTAL)
         
         while i < maxColoumn:
-            panel = wx.Panel(self,-1, style=wx.TRANSPARENT_WINDOW,size=(30, 25),name=str(i))
+            panel = wx.Panel(self,-1,size=(50, 50),name=str(i))
             panel.Bind(wx.EVT_LEFT_UP,controller.onStichclick)
             panel.Bind(wx.EVT_RIGHT_UP,controller.onStichRightClick)
-            box.Add(panel, 1, wx.EXPAND)
+            box.Add(panel, 0, 0 ,0)
             self.panels.append(panel)
             i += 1
         
-        self.SetAutoLayout(False)
+        #self.SetAutoLayout(False)
+        box.SetSizeHints(self)
         self.SetSizer(box)
         self.Layout()
         

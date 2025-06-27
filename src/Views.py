@@ -58,3 +58,6 @@ class CrossStitchWorkView():
     
     def updateStich(self):
         pass
+    
+    def clearStich(self):
+        pass
