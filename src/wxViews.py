@@ -24,8 +24,9 @@ class WXViewFactory(Views.ViewsFactory):
 class MainWindowView(wx.Frame,Views.MainWindowView):
     
     def __init__(self, controller, parentView):
-        wx.Frame.__init__(self,parentView, -1, "Main Window",size=(600, 500))
+        wx.Frame.__init__(self,parentView, -1, "Main Window")
         self.makeMenuBar(controller)
+        self.Maximize(maximize=True)
    
     def show(self):
         self.Show()
@@ -54,6 +55,8 @@ class CrossStitchWorkView(wx.Frame, Views.CrossStitchWorkView):
     def __init__(self, controller,parentView):
         wx.Frame.__init__(self,parentView, -1, "Cross Stitch",size=(300, 250))
         
+        self.BackgroundColour = wx.WHITE
+        
         self.panels = []
         
         maxColoumn = 3
@@ -62,12 +65,12 @@ class CrossStitchWorkView(wx.Frame, Views.CrossStitchWorkView):
         box = wx.BoxSizer(wx.HORIZONTAL)
         
         while i < maxColoumn:
-            panel = wx.Panel(self,-1, style=wx.SUNKEN_BORDER,size=(30, 25),name=str(i))
-            panel.BackgroundColour = wx.WHITE
+            panel = wx.Panel(self,-1, style=wx.TRANSPARENT_WINDOW,size=(30, 25),name=str(i))
             panel.Bind(wx.EVT_LEFT_UP,controller.onStichclick)
+            panel.Bind(wx.EVT_RIGHT_UP,controller.onStichRightClick)
             box.Add(panel, 1, wx.EXPAND)
             self.panels.append(panel)
-            i+=1
+            i += 1
         
         self.SetAutoLayout(False)
         self.SetSizer(box)
@@ -77,7 +80,10 @@ class CrossStitchWorkView(wx.Frame, Views.CrossStitchWorkView):
         self.Show()
         
     def updateStich(self,name):
-        print(name)
         self.panels[int(name)].SetBackgroundColour(wx.BLACK)
+        self.Refresh(eraseBackground=True, rect=None)
+        
+    def clearStich(self,name):
+        self.panels[int(name)].SetBackgroundColour(None)
         self.Refresh(eraseBackground=True, rect=None)
     

@@ -32,3 +32,5 @@ class CrossStitchWorkConttoller(object):
     def onStichclick(self,event):
         self.view.updateStich(event.EventObject.Name)
         
+    def onStichRightClick(self,event):
+        self.view.clearStich(event.EventObject.Name)
