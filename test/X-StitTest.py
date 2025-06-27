@@ -15,6 +15,7 @@ class WStitTest(unittest.TestCase):
     def setUpClass(cls):
         appThread.start()
         
+        
     @classmethod
     def tearDownClass(cls):
         print("Tests complete, please close window")

@@ -5,14 +5,14 @@ Created on 12 Jun 2025
 '''
 
 from controllers import MainWindowController
-from wxViews import MainWindowWXViewFactory
+from wxViews import WXViewFactory
 import wx
 
 
 def wxRun():
     
     app = wx.App()
-    controller = MainWindowController(MainWindowWXViewFactory())
+    controller = MainWindowController(WXViewFactory())
     controller.showView()
     app.MainLoop()
 
