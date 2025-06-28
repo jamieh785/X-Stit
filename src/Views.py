@@ -21,8 +21,8 @@ class ViewsFactory():
                 
         self.__views = defualtViews
     
-    def createView(self,view,controller,parentView):
-        return self.__views[view](controller,parentView)
+    def createView(self,view,*args):
+        return self.__views[view](*args)
     
     def createDefualtViews(self):
         defualtViews = {}

@@ -24,13 +24,14 @@ class MainWindowController(object):
     
 class CrossStitchWorkConttoller(object):
     def __init__(self,viewFactory,parentView):
-        self.view = viewFactory.createView("CrossStitchWorkView",self,parentView)
+        self.view = viewFactory.createView("CrossStitchWorkView",self,parentView,10,10)
         
     def showView(self):
         self.view.show()
         
     def onStichclick(self,event):
-        self.view.updateStich(event.EventObject.Name)
+        stitchID = event.EventObject.Name
+        self.view.updateStich(stitchID)
         
     def onStichRightClick(self,event):
         self.view.clearStich(event.EventObject.Name)
