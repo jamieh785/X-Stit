@@ -4,6 +4,8 @@ Created on 12 Jun 2025
 @author: metily
 '''
 
+import Models
+
 class MainWindowController(object):
     '''
     classdocs
@@ -19,19 +21,30 @@ class MainWindowController(object):
         self.View.exit()
         
     def onNewCrossStitch(self,event):
-        self.cSWAController = CrossStitchWorkConttoller(self.viewFactory,self.View)
+        crossStitch = Models.CrossStitch(10,10)
+        self.cSWAController = CrossStitchWorkConttoller(self.viewFactory,self.View,crossStitch)
         self.cSWAController.showView()
     
 class CrossStitchWorkConttoller(object):
-    def __init__(self,viewFactory,parentView):
-        self.view = viewFactory.createView("CrossStitchWorkView",self,parentView,10,10)
+    def __init__(self,viewFactory,parentView,crossStitch):
+        self.crossStitch = crossStitch
+        self.view = viewFactory.createView("CrossStitchWorkView",self,parentView,crossStitch.rows,crossStitch.coloumns)
         
     def showView(self):
         self.view.show()
         
     def onStichclick(self,event):
         stitchID = event.EventObject.Name
+        x,y = self.stitchIDtoXY(stitchID)
+        self.crossStitch.updateStitch(x,y)
         self.view.updateStich(stitchID)
         
     def onStichRightClick(self,event):
-        self.view.clearStich(event.EventObject.Name)
+        stitchID = event.EventObject.Name
+        x,y = self.stitchIDtoXY(stitchID)
+        self.crossStitch.clearStitch(x,y)
+        self.view.clearStich(stitchID)
+        
+    def stitchIDtoXY(self,stitchID):
+        splitID = stitchID.split(",")
+        return int(splitID[0]), int(splitID[1])

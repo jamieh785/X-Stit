@@ -59,19 +59,21 @@ class CrossStitchWorkView(wx.Frame, Views.CrossStitchWorkView):
         
         self.panels = []
         
-        maxColoumn = rows * columns
-        i = 0
+        grid = wx.GridSizer(rows,columns,0,0)
         
-        grid = wx.GridSizer(rows,columns,5,5)
-        
-        while i < maxColoumn:
-            panel = wx.Panel(self,-1,size=(50, 50),name=str(i))
-            panel.Bind(wx.EVT_LEFT_UP,controller.onStichclick)
-            panel.Bind(wx.EVT_RIGHT_UP,controller.onStichRightClick)
-            grid.Add(panel, 0, 0 ,0)
-            self.panels.append(panel)
-            i += 1
-        
+        for x in range(columns):
+            row= []
+            for y in range(rows):
+                stitchID = str(x) + "," + str(y)
+                panel = wx.Panel(self,-1,size=(50, 50),name=stitchID)
+                panel.Bind(wx.EVT_LEFT_UP,controller.onStichclick)
+                panel.Bind(wx.EVT_RIGHT_UP,controller.onStichRightClick)
+                grid.Add(panel, 0, 0 ,0)
+                row.append(panel)
+                
+            self.panels.append(row)
+            del row
+            
         #self.SetAutoLayout(False)
         grid.SetSizeHints(self)
         self.SetSizer(grid)
@@ -80,11 +82,13 @@ class CrossStitchWorkView(wx.Frame, Views.CrossStitchWorkView):
     def show(self):
         self.Show()
         
-    def updateStich(self,name):
-        self.panels[int(name)].SetBackgroundColour(wx.BLACK)
+    def updateStich(self,stitchID):
+        x,y=stitchID.split(",")
+        self.panels[int(x)][int(y)].SetBackgroundColour(wx.BLACK)
         self.Refresh(eraseBackground=True, rect=None)
         
-    def clearStich(self,name):
-        self.panels[int(name)].SetBackgroundColour(None)
+    def clearStich(self,stitchID):
+        x,y=stitchID.split(",")
+        self.panels[int(x)][int(y)].SetBackgroundColour(None)
         self.Refresh(eraseBackground=True, rect=None)
     

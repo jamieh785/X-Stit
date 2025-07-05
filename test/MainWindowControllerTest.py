@@ -5,14 +5,17 @@ Created on 14 Jun 2025
 '''
 import unittest
 from unittest.mock import Mock, MagicMock, patch
+import Models
 from controllers import MainWindowController, CrossStitchWorkConttoller
+
 import Views
 #Define Test wide veriables
 ViewFactory = Mock(spec=Views.ViewsFactory)
 MWView = Mock(spec=Views.MainWindowView)
 ViewFactory.createView = MagicMock(return_value=MWView)
 
-CrossStitchWorkConttoller = Mock(spec=CrossStitchWorkConttoller)
+mockedCrossStitch = Mock(spec=Models.CrossStitch)
+mockCrossStitchWorkConttoller = Mock(spec=CrossStitchWorkConttoller)
 
 
 class MainWindowControllerTests(unittest.TestCase):
@@ -37,14 +40,18 @@ class MainWindowControllerTests(unittest.TestCase):
         self.MWController.onExit(None)
         MWView.exit.assert_called_once()
         
+        
     @patch('controllers.CrossStitchWorkConttoller')
-    def test_NewCrossStitchWorkArea(self, mockedCSWCoontrollerInit):
-        mockedCSWCoontrollerInit.return_value = CrossStitchWorkConttoller
+    @patch('Models.CrossStitch')
+    def test_NewCrossStitchWorkArea(self, mockedCrossStitchInit,mockedCSWCoontrollerInit):
+        mockedCrossStitchInit.return_value = mockedCrossStitch
+        mockedCSWCoontrollerInit.return_value = mockCrossStitchWorkConttoller
         self.MWController.onNewCrossStitch(None)
         
-        mockedCSWCoontrollerInit.assert_called_once_with(ViewFactory,MWView)
-        CrossStitchWorkConttoller.showView.assert_called_once()
-        self.assertEqual(self.MWController.cSWAController, CrossStitchWorkConttoller)
+        mockedCrossStitchInit.assert_called_once()
+        mockedCSWCoontrollerInit.assert_called_once_with(ViewFactory,MWView,mockedCrossStitch)
+        mockCrossStitchWorkConttoller.showView.assert_called_once()
+        self.assertEqual(self.MWController.cSWAController, mockCrossStitchWorkConttoller)
         
     
     
