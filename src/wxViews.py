@@ -54,29 +54,19 @@ class CrossStitchWorkView(wx.Frame, Views.CrossStitchWorkView):
    
     def __init__(self, controller,parentView,rows,columns):
         wx.Frame.__init__(self,parentView, -1, "Cross Stitch")
-        
-        self.BackgroundColour = wx.WHITE
+             
+        self.backgroundPanel = wx.Panel(self,-1,size=(50*rows,50*columns))
+        self.backgroundPanel.BackgroundColour = wx.WHITE
         
         self.panels = []
         
-        grid = wx.GridSizer(rows,columns,0,0)
+        self.__setUpGridPattern(rows, columns, controller)
         
-        for x in range(columns):
-            row= []
-            for y in range(rows):
-                stitchID = str(x) + "," + str(y)
-                panel = wx.Panel(self,-1,size=(50, 50),name=stitchID)
-                panel.Bind(wx.EVT_LEFT_UP,controller.onStichclick)
-                panel.Bind(wx.EVT_RIGHT_UP,controller.onStichRightClick)
-                grid.Add(panel, 0, 0 ,0)
-                row.append(panel)
-                
-            self.panels.append(row)
-            del row
-            
-        #self.SetAutoLayout(False)
-        grid.SetSizeHints(self)
-        self.SetSizer(grid)
+        box = wx.BoxSizer(wx.VERTICAL)
+        box.Add(self.backgroundPanel, 0, wx.ALIGN_CENTER, 0)
+        
+        box.SetSizeHints(self)
+        self.SetSizer(box)
         self.Layout()
         
     def show(self):
@@ -92,3 +82,22 @@ class CrossStitchWorkView(wx.Frame, Views.CrossStitchWorkView):
         self.panels[int(x)][int(y)].SetBackgroundColour(None)
         self.Refresh(eraseBackground=True, rect=None)
     
+    
+    
+    def __setUpGridPattern(self,rows,columns,controller):
+        grid = wx.GridSizer(rows,columns,0,0)
+        
+        for x in range(columns):
+            row= []
+            for y in range(rows):
+                stitchID = str(x) + "," + str(y)
+                panel = wx.Panel(self.backgroundPanel,-1,size=(50, 50),name=stitchID)
+                panel.Bind(wx.EVT_LEFT_UP,controller.onStichclick)
+                panel.Bind(wx.EVT_RIGHT_UP,controller.onStichRightClick)
+                grid.Add(panel, 0, 0 ,0)
+                row.append(panel)
+                
+            self.panels.append(row)
+            del row
+        
+        self.backgroundPanel.SetSizer(grid)
